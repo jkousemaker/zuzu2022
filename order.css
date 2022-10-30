@@ -97,6 +97,12 @@
     user-select: none;
 }
 
+.product-stock {
+    right: 0px;
+    bottom: 0px;
+    margin: 5px;
+}
+
 .product:hover > .product-price {
     font-size: 20px;
     transform: translateY(24px);
@@ -104,9 +110,6 @@
 
 .product:hover > .product-stock {
     font-size: 12px;
-    right: 0px;
-    bottom: 0px;
-    margin: 5px;
 }
 
 .product:hover, .product-underlay:hover > .product {

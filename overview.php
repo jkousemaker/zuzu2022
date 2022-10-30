@@ -25,7 +25,7 @@ if(isset($_SESSION['email'])) {
                 <input type='submit' value='Zoeken' name='submit'>
             </form>
             <div class='display-wrapper'>
-                <div class='display-cards'>
+                <div class='display-cards kaka'>
                     <table class='order-overview info last'>
                         <thead>
                         <tr>
