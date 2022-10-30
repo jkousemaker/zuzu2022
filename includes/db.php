@@ -13,6 +13,8 @@ $options = [
     PDO::ATTR_EMULATE_PREPARES   => false,
 ];
 
+
+
 try {
     $pdo = new PDO($dsn, $user, $pass, $options);
     global $pdo;

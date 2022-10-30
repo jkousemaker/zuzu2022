@@ -1,0 +1,36 @@
+.display-cards {
+    display: flex;
+    flex-direction: row;
+    margin: 25px 0;
+    border: 13px solid #009879;
+}
+
+.display-cards > .order-overview {
+    margin: 0;
+}
+
+.display-cards > .order-overview tbody tr:last-of-type {
+    border-bottom: none;
+}
+
+.info {
+    display: flex;
+    flex-direction: row;
+    flex-wrap: nowrap;
+    align-items: center;
+    display: flex;
+    align-items: flex-start;
+}
+
+.info > thead > tr, .info > tbody > tr {
+    display: flex;
+    flex-direction: column;
+}
+
+.last {
+    min-width: 0px;
+}
+
+.search {
+    margin-top: 20px;
+}

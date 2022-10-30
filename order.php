@@ -25,7 +25,7 @@
             $dayPeriod = "avond";
             $tempMinutes = 54;
             break;
-        case $localHour == 0 && $localHour <= 5:
+        case $localHour >= 0 && $localHour <= 5:
             $dayPeriod = "nacht";
             $tempMinutes = 12;
             $open = false;
@@ -37,6 +37,7 @@
     }
 
     if($open) {
+
         echo "<div class='order-wrapper'>
                 <h1>Goede $dayPeriod!</h1>
                 <div class='order'>
@@ -60,60 +61,27 @@
                     <div class='forms'>
                         <form method='POST' action='modules/addSushi.php'>
                                 <div class='products-grid'>
-                                    <div class='product-underlay'>
-                                        <div class='product'>
-                                            <img src='img/chirashizushi.jpg' alt='chirashizushi'>
-                                            <input type='submit' value='Chirashizushi' name='addSushi'>
-                                        </div>
-                                    </div>
-                                    <div class='product-underlay'>
-                                        <div class='product'>
-                                            <img src='img/futomaki.jpg' alt='futomaki'>
-                                            <input type='submit' value='Futomaki' name='addSushi'>
-                                        </div>
-                                    </div>
-                                    <div class='product-underlay'>
-                                        <div class='product'>
-                                            <img src='img/gunkan-maki.jpg' alt='gunkan maki'>
-                                            <input type='submit' value='Gunkanmaki' name='addSushi'>
-                                        </div>
-                                    </div>
-                                    <div class='product-underlay'>
-                                        <div class='product'>
-                                            <img src='img/hosomaki-rolls.jpg' alt='hosomaki rolls'>
-                                            <input type='submit' value='Hosomakirolls' name='addSushi'>
-                                        </div>
-                                    </div>
-                                    <div class='product-underlay'>
-                                        <div class='product'>
-                                            <img src='img/nigirizushi.jpg' alt='nigirizushi'>
-                                            <input type='submit' value='Nigirizushi' name='addSushi'>
-                                        </div>
-                                    </div>
-                                    <div class='product-underlay'>
-                                        <div class='product'>
-                                            <img src='img/salmon-gunkan.jpg' alt='salmon gunkan'>
-                                            <input type='submit' value='Salmongunkan' name='addSushi'>
-                                        </div>
-                                    </div>
-                                    <div class='product-underlay'>
-                                        <div class='product'>
-                                            <img src='img/temaki.jpg' alt='temaki'>
-                                            <input type='submit' value='Temaki' name='addSushi'>
-                                        </div>
-                                    </div>
-                                    <div class='product-underlay'>
-                                        <div class='product'>
-                                            <img src='img/temarizushi.jpg' alt='temarizushi'>
-                                            <input type='submit' value='Temarizushi' name='addSushi'>
-                                        </div>
-                                    </div>
-                                    <div class='product-underlay'>
-                                        <div class='product'>
-                                            <img src='img/uramaki.jpg' alt='uramaki'>
-                                            <input type='submit' value='Uramaki' name='addSushi'>
-                                        </div>
-                                    </div>
+                                    ";
+                                    global $pdo;
+                                    $sql = $pdo->prepare("SELECT * FROM sushi");
+                                    $sql->execute();
+                                    $result = $sql->fetchAll(PDO::FETCH_ASSOC);
+                                    $i = 1;
+
+                                    foreach($result as $data) {
+                                        echo "    
+                                                        <div class='product-underlay'>
+                                                                    <div class='product'>
+                                                                        <img src='img/$i.jpg' alt='". $data['name'] ."'>
+                                                                        <input type='submit' value='". $data['name'] ."' name='addSushi'>
+                                                                        <p class='product-price'>". $data['price'] ."€</p>
+                                                                        <p class='product-stock'>Voorraad: ". $data['amount'] ."</p>
+                                                                    </div>
+                                                                </div>
+                                                    ";
+                                        $i++;
+                                    }
+                            echo"
                                 </div>
                             </form>
                     
@@ -121,32 +89,44 @@
                         <form method='POST' action='modules/placeOrder.php'>
                             <div class='user-input'>
                                 <input type='text' placeHolder='Volledige naam' name='name'>
-                                <input type='text' placeholder='Adres' name='adres'>
                                 <input type='text' placeholder='Email' name='email'>
                                 <input type='tel' placeholder='Telefoon nummer' name='phoneNumber'>
+                                <input type='text' placeholder='Stad' name='city'>
+                                <input type='text' placeholder='Postcode' name='postalcode'>
+                                <input type='text' placeholder='Adres' name='adres'>
                                 <input type='submit' value='submit' name='submit'>
                             </div>
                                 
-                            <table>
-                                <tr>
-                                    <th>Soort sushi</th>
-                                    <th>Hoeveelheid</th>
-                                    <th>Prijs</th>
-                                </tr>
+                            <table class='order-overview'>
+                                <thead>
+                                    <tr>
+                                        <th>Soort sushi</th>
+                                        <th>Hoeveelheid</th>
+                                        <th>Prijs</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
                         ";
+
                         $temp = $sushiNameCount - 1;
                         for($i = 0; $i < $sushiNameCount; $i++) {
+                            $sql = $pdo->prepare("SELECT price FROM sushi WHERE name = '$sushiNames[$i]'");
+                            $sql->execute();
+                            $result = $sql->fetch(PDO::FETCH_ASSOC);
+
+                            $sushiPrice = $result["price"];
                             echo "<tr>
                                     <td>$sushiNames[$i]</td>
-                                    <td><input type='number'></td>
-                                    <td>15$</td>
+                                    <td><input class='sushi-price-input' value='0' min='0' name='$sushiNames[$i]' type='number'></td>
+                                    <td class='sushi-price'>".$sushiPrice." €</td>
                                     ";
                                     if($i === $temp) {
-                                        echo "<td><input type='submit' value='delete' name='delete'></td>";
+                                        echo "<td class='delete-button'><input type='submit' value='delete' name='delete'></td>";
                                     }
-                            "     </tr>";
+                            echo "     </tr>";
                         }
-                   echo"    </table>
+                   echo"        </tbody>
+                            </table>
                         </form>
                     </div>
                     </div>
@@ -161,13 +141,13 @@
         if(!$sushiNameCount) {
             array_push($_SESSION["sushiNames"], $_POST['addSushi']);
         } else {
-            for($i = 0; $i < $sushiNameCount; $i++) {
-                if($sushiNames[$i] === $_POST['addSushi']) {
-                    $errorMsg = "You already added this sushi!";
+            for ($i = 0; $i < $sushiNameCount; $i++) {
+                if ($sushiNames[$i] === $_POST['addSushi']) {
+                    $_SESSION["msg"] = "U heeft deze sushi al toegevoegd!";
                     $duplicate = true;
                 }
             }
-            if(!$duplicate) {
+            if (!$duplicate) {
                 array_push($_SESSION["sushiNames"], $_POST['addSushi']);
             }
         }
@@ -176,19 +156,16 @@
     if(isset($_POST['delete'])) {
         for($i = 0; $i < $sushiNameCount; $i++) {
             if($sushiNames[$i] === $_POST['delete']) {
-                var_dump($sushiNames[$i]);
                 echo "<br>";
                 unset($sushiNames[$i]);
                 $_SESSION['sushiNames'] = $sushiNames;
 
 
 
-                $errorMsg = "Sushi deleted!";
+                $_SESSION["msg"] = "Sushi deleted!";
             }
         }
     }
-
-    echo $errorMsg;
 
     ?>
 

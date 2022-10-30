@@ -1,0 +1,44 @@
+.order-overview {
+    min-width: 377px;
+    max-height: 100%;
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+}
+
+.order-overview > thead tr, .order-overview > thead {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+
+}
+
+.order-overview th,
+.order-overview td {
+    padding: 12px 15px;
+}
+
+
+
+.order-overview tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.order-overview tbody tr:nth-of-type(odd) {
+    background-color: #264653;
+    color: white;
+}
+
+.order-overview tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+
+.order-overview tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+
+.delete-button {
+    background: #264653;
+}

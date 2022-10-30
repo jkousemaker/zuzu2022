@@ -1,35 +1,40 @@
 <?php
     session_start();
-
 include_once 'includes/db.php';
 include_once 'includes/head.php';
+if(!empty($_SESSION["msg"])) {
+    include_once 'includes/warning.php';
+}
 include_once 'includes/jumbotron.php';
 
-if(!$_SESSION["sushiNames"]) {
+if(!isset($_SESSION["sushiNames"])) {
     $_SESSION["sushiNames"] = [];
 }
 
-if(!$_SESSION["page"]) {
+if(!isset($_SESSION["page"])) {
     $_SESSION["page"] = "home";
+}
+
+if(!isset($_SESSION["msg"])) {
+    $_SESSION["msg"] = "";
 }
 
 
 switch ($_SESSION["page"]) {
     case "home" :
         include_once 'includes/home.php';
-        var_dump(1);
         break;
     case "order" :
         include_once 'order.php';
-        var_dump(2);
         break;
     case "overview" :
         include_once 'overview.php';
-        var_dump(3);
+        break;
+    case "ordered" :
+        include_once 'ordered.php';
         break;
     default :
         include_once 'includes/home.php';
-        var_dump(4);
         break;
 }
 
@@ -49,3 +54,6 @@ if(isset($_POST["submit"])) {
     }
     header('location: index.php');
 }
+
+$_SESSION["msg"] = "";
+
